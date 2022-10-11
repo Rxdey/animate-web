@@ -4,4 +4,8 @@
 
 <script setup lang="ts"></script>
 
-<style scoped></style>
+<style lang="less">
+#app {
+  font-size: 28px;
+}
+</style>

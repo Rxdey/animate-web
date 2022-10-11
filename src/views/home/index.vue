@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    home
+    车险
   </div>
 </template>
 
