@@ -1,9 +1,9 @@
 <template>
   <router-view class="page"></router-view>
   <nav class="nav-bar">
-      <router-link class="nav-item" v-for="nav in navList" :to="nav.path">
-        <span role="link">{{nav.name}}</span>
-      </router-link>
+    <router-link class="nav-item" v-for="nav in navList" :to="nav.path">
+      <span role="link">{{ nav.name }}</span>
+    </router-link>
   </nav>
 </template>
 
@@ -11,11 +11,14 @@
 const navList = [
   { name: 'Home', path: '/home' },
   { name: 'Search', path: '/search' },
-  { name: 'User', path: '/user' },
+  { name: 'User', path: '/user' }
 ];
 </script>
 
 <style lang="less">
+@import '@/assets/css/common.less';
+@import '@/assets/css/reset.less';
+
 html,
 body {
   height: 100%;
@@ -28,6 +31,7 @@ body {
   display: flex;
   flex-flow: column;
   height: 100%;
+  overflow: hidden;
 }
 .page {
   flex: 1;
@@ -38,35 +42,39 @@ body {
   display: flex;
   flex-flow: row nowrap;
   color: var(--color-white);
-  padding: 32px;
+  padding: 16px 32px 32px 32px;
+  position: relative;
+  align-items: flex-end;
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 10rem;
+    height: 6px;
+    background-color: var(--border-color);
+    box-shadow: 4px 4px 0 var(--shaodw-color);
+    top: 0;
+  }
+  &::after {
+    transform: rotate(5deg);
+    left: 0;
+  }
+  &::before {
+    left: -4.82rem;
+    transform: rotate(-15deg);
+    content: none;
+  }
   .nav-item {
     flex: 1;
-    align-items: center;
     text-align: center;
     text-shadow: 2px 2px var(--color-orange);
     position: relative;
+    line-height: 1;
     span {
       position: relative;
       z-index: 1;
-    }
-    &:last-child {
-      &.active {
-        &::after {
-          border-left: none;
-          // border-bottom: none;
-          // border-top: 5px solid var(--border-color);
-          border-right: 16px solid var(--border-color);
-        }
-      }
-    }
-    &:nth-child(2) {
-      &.active {
-        &::after {
-          border-left: none;
-          border-right: none;
-          // border-top: 5px solid var(--border-color);
-        }
-      }
+      display: inline-block;
+      transform: skewY(-10deg);
     }
     &.active {
       &::after {
@@ -82,12 +90,39 @@ body {
         box-shadow: 0px 0px 8px var(--shaodw-color);
         border-bottom: 5px solid var(--border-color);
         border-left: 16px solid var(--border-color);
+        transform: skewY(-10deg);
+      }
+    }
+
+    &:nth-child(1) {
+      font-size: 52px;
+    }
+    &:nth-child(2) {
+      font-size: 36px;
+      &.active {
+        &::after {
+          border-left: none;
+          border-right: none;
+          // border-top: 5px solid var(--border-color);
+        }
+      }
+    }
+    &:last-child {
+      font-size: 28px;
+      &.active {
+        &::after {
+          border-left: none;
+          // border-bottom: none;
+          // border-top: 5px solid var(--border-color);
+          border-right: 16px solid var(--border-color);
+        }
       }
     }
   }
   a {
     list-style: none;
     color: inherit;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 </style>
