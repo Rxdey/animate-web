@@ -14,7 +14,7 @@
             </div>
           </template>
           <div class="comic-list">
-            <div class="comic-card shadow" v-for="(item, i) in tab.list" :key="i"></div>
+            <ComicCard v-for="(item, i) in tab.list" :key="i"></ComicCard>
           </div>
         </van-tab>
       </van-tabs>
@@ -25,6 +25,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import ComicCard from '@/components/ComicCard/ComicCard.vue';
 
 const tabList = ref([
   { name: '书架', key: 1, list: [], loading: false, finish: false, page: 1 },

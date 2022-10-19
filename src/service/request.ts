@@ -1,4 +1,5 @@
 import defaultInstance, { AxiosCustomConfig, jsonp } from './interceptors';
+import { ResponseType } from '@/service/responseTypes';
 
 const BASE_CONFIG: AxiosCustomConfig = {
   method: 'get',
@@ -9,16 +10,20 @@ const BASE_CONFIG: AxiosCustomConfig = {
     'content-type': 'application/x-www-form-urlencoded',
   },
 };
+
+type RequestType<T> = {
+  config: AxiosCustomConfig;
+  data?: T
+}
 /**
  * 请求封装
- * @param {Object} opt 请求配置
+ * @param {Object} config 请求配置
  * @param {Object} data 参数
- * @param {Blooean} isQs 是否qs格式化参数
  */
-const request = async (config: AxiosCustomConfig, data = {}) => {
+const request = async <T, P>(config: AxiosCustomConfig, data: T): Promise<ResponseType<P>> => {
   const setting = { ...BASE_CONFIG, ...config };
   const { type, url, method } = config;
-  if (!url) return null;
+  if (!url) return { state: 0 };
   if (method && method.toUpperCase() === 'GET') {
     setting.params = data;
   } else {
@@ -30,12 +35,12 @@ const request = async (config: AxiosCustomConfig, data = {}) => {
       const res = await jsonp(url, data);
       return res;
     }
-    const res = await instance(setting);
-    return res.data;
+    const res: ResponseType<P> = await instance(setting);
+    return res.data || { state: 0 };
   } catch (error: any) {
     // 此处把异常处理掉
     console.error(error);
-    return { code: 0 };
+    return { state: 0 };
   }
 };
 

@@ -65,11 +65,15 @@ body {
     content: none;
   }
   .nav-item {
+    --fs: 28px;
+    --fm: 36px;
+    --fl: 48px;
     flex: 1;
     text-align: center;
     text-shadow: 2px 2px var(--color-orange);
     position: relative;
     line-height: 1;
+    font-size: var(--fm);
     span {
       position: relative;
       z-index: 1;
@@ -77,6 +81,7 @@ body {
       transform: skewY(-10deg);
     }
     &.active {
+      font-size: var(--fl);
       &::after {
         content: '';
         position: absolute;
@@ -93,27 +98,18 @@ body {
         transform: skewY(-10deg);
       }
     }
-
-    &:nth-child(1) {
-      font-size: 52px;
-    }
     &:nth-child(2) {
-      font-size: 36px;
       &.active {
         &::after {
           border-left: none;
           border-right: none;
-          // border-top: 5px solid var(--border-color);
         }
       }
     }
     &:last-child {
-      font-size: 28px;
       &.active {
         &::after {
           border-left: none;
-          // border-bottom: none;
-          // border-top: 5px solid var(--border-color);
           border-right: 16px solid var(--border-color);
         }
       }

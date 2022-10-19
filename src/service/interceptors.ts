@@ -14,12 +14,12 @@ export interface AxiosCustomConfig extends AxiosRequestConfig {
  * jsonp请求
  * @param url
  * @param obj
- * @returns
+ * @returns 返回值不太好确定
  */
-export const jsonp = (url: string, obj: ActionType): Promise<string> => {
+export const jsonp = <T>(url: string, obj: T): Promise<any> => {
   const data = qs.stringify(obj);
   return new Promise((resolve, reject) => {
-    window.jsonCallBack = (result: string) => {
+    window.jsonCallBack = (result: any) => {
       resolve(result);
     };
     const JSONP = document.createElement('script');
