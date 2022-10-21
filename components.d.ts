@@ -8,8 +8,10 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     ComicCard: typeof import('./src/components/ComicCard/ComicCard.vue')['default']
+    ComicList: typeof import('./src/components/ComicList/ComicList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SearchCard: typeof import('./src/components/SearchCard/SearchCard.vue')['default']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
   }

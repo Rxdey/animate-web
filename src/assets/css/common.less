@@ -23,6 +23,21 @@
 body {
   font-family: tjl, PingFangSC, Noto Sans SC, system-ui, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif !important;
 }
+.txt-shadow {
+  text-shadow: 2px 2px 0 var(--color-orange);
+}
+.ov-1 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ov-2 {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
 .shadow {
   border: 2px solid var(--border-color);
   box-shadow: 0px 0px 4px var(--border-color);
@@ -80,3 +95,5 @@ body {
     transition: all .3s;
   }
 }
+
+

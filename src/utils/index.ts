@@ -3,6 +3,7 @@ import { PropType } from '../types';
 export const PREFIX = 'ANIMATE'
 /**
  * localStorage 同域名增加pathname前缀
+ * 转换操作交给调用端方便一点
  */
 export const rxLocalStorage = {
     removeItemList(array = []) {
@@ -28,7 +29,7 @@ export const rxLocalStorage = {
     },
     getItem(name: string) {
         const tag = `__${PREFIX}__`;
-        return localStorage.getItem(tag + name);
+        return localStorage.getItem(tag + name) || '';
     },
     setItem(name: string, data: string) {
         const tag = `__${PREFIX}__`;

@@ -1,13 +1,16 @@
 import defaultInstance, { AxiosCustomConfig, jsonp } from './interceptors';
 import { ResponseType } from '@/service/responseTypes';
+import { BASE_URL } from "./api.config";
 
 const BASE_CONFIG: AxiosCustomConfig = {
   method: 'get',
   url: '/',
   timeout: 10000,
+  baseURL: BASE_URL,
   responseType: 'json',
+  withCredentials: false,
   headers: {
-    'content-type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json; charset=utf-8',
   },
 };
 
@@ -22,6 +25,8 @@ type RequestType<T> = {
  */
 const request = async <T, P>(config: AxiosCustomConfig, data: T): Promise<ResponseType<P>> => {
   const setting = { ...BASE_CONFIG, ...config };
+  const headers = { ...BASE_CONFIG.headers, ...config.headers }
+  setting.headers = headers;
   const { type, url, method } = config;
   if (!url) return { state: 0 };
   if (method && method.toUpperCase() === 'GET') {

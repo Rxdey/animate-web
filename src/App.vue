@@ -1,13 +1,23 @@
 <template>
-  <router-view class="page"></router-view>
-  <nav class="nav-bar">
-    <router-link class="nav-item" v-for="nav in navList" :to="nav.path">
-      <span role="link">{{ nav.name }}</span>
-    </router-link>
-  </nav>
+  <div class="container">
+    <router-view class="page" v-slot="{ Component }">
+      <keep-alive :include="mainStore.keepPageList">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
+    <nav class="nav-bar">
+      <router-link class="nav-item" v-for="nav in navList" :to="nav.path">
+        <span role="link">{{ nav.name }}</span>
+      </router-link>
+    </nav>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { useMainStore } from '@/store/modules/useMainStore';
+
+const mainStore = useMainStore();
+
 const navList = [
   { name: 'Home', path: '/home' },
   { name: 'Search', path: '/search' },
@@ -28,9 +38,13 @@ body {
   font-size: 28px;
   max-width: 10rem;
   margin: 0 auto;
+  height: 100%;
+}
+.container {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-flow: column;
-  height: 100%;
   overflow: hidden;
 }
 .page {
@@ -45,25 +59,25 @@ body {
   padding: 16px 32px 32px 32px;
   position: relative;
   align-items: flex-end;
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    width: 10rem;
-    height: 6px;
-    background-color: var(--border-color);
-    box-shadow: 4px 4px 0 var(--shaodw-color);
-    top: 0;
-  }
-  &::after {
-    transform: rotate(5deg);
-    left: 0;
-  }
-  &::before {
-    left: -4.82rem;
-    transform: rotate(-15deg);
-    content: none;
-  }
+  // &::before,
+  // &::after {
+  //   content: none;
+  //   position: absolute;
+  //   width: 10rem;
+  //   height: 6px;
+  //   background-color: var(--border-color);
+  //   box-shadow: 4px 4px 0 var(--shaodw-color);
+  //   top: 0;
+  // }
+  // &::after {
+  //   transform: rotate(5deg);
+  //   left: 0;
+  // }
+  // &::before {
+  //   left: -4.82rem;
+  //   transform: rotate(-15deg);
+  //   content: none;
+  // }
   .nav-item {
     --fs: 28px;
     --fm: 36px;
@@ -78,7 +92,7 @@ body {
       position: relative;
       z-index: 1;
       display: inline-block;
-      transform: skewY(-10deg);
+      // transform: skewY(-10deg);
     }
     &.active {
       font-size: var(--fl);

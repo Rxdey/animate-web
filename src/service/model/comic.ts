@@ -4,7 +4,7 @@ import { ResponseType, CollectionData } from '@/service/responseTypes';
 type SearchParams = {
     searchKey: string;
 }
-type SearchRespose = {
+export type SearchRespose = {
     detailUrl: string;
     name?: string;
     cover?: string;
