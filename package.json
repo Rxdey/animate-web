@@ -17,7 +17,7 @@
     "pinia": "^2.0.0-rc.10",
     "postcss-px-to-viewport-rxdey": "^0.0.9",
     "qs": "^6.11.0",
-    "vant": "^3.6.4",
+    "vant": "^4.0.0-rc.6",
     "vue": "^3.2.41",
     "vue-router": "4"
   },

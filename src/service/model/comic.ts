@@ -61,14 +61,22 @@ export const getCollectionFeatch = (params: getCollectionParams): Promise<Respon
 }, params);
 
 
-type detailParams = {
+export type detailParams = {
     animaId: string | number;
 }
-type detailRespose = {
+export type detailChapter = {
     chapter: string;
     chapterUrl: string;
     chapterId: string | number;
     animaId: string | number;
+}
+export type detailRespose = {
+    name?: string,
+    desc?: string,
+    cover?: string,
+    author?: string,
+    state?: string | number,
+    chapterList?: detailChapter[]
 }
 /**
  * comic详情页面

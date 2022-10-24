@@ -27,7 +27,7 @@
     </div>
     <div class="result-list" v-show="!showHistoryList">
       <ComicList>
-        <SearchCard v-for="comic in searchList" :key="comic.animaId" :data="comic" />
+        <SearchCard v-for="comic in searchList" :key="comic.animaId" :data="comic" @click="toDetail(comic)"/>
       </ComicList>
     </div>
   </div>
@@ -42,6 +42,7 @@ import { searchFeatch } from '@/service/model/comic';
 import { rxLocalStorage } from '@/utils';
 import type { SearchRespose } from '@/service/model/comic';
 
+const router = useRouter();
 const searchKey = ref('');
 const searchList: Ref<SearchRespose[]> = ref([]);
 const historyList: Ref<string[]> = ref([]);
@@ -72,6 +73,15 @@ const onClear = () => {
 };
 const onInput = (e: any) => {
   showHistoryList.value = !e.target.value;
+}
+const toDetail = (comic: SearchRespose) => {
+  const { animaId } = comic;
+  router.push({
+    path: '/detail',
+    query: {
+      animaId
+    }
+  });
 }
 onMounted(() => {
   historyList.value = JSON.parse(rxLocalStorage.getItem('search-history') || '[]');

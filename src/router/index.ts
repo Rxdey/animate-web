@@ -23,6 +23,12 @@ const routes: Array<RouteRecordRaw> = [
         name: 'user',
         component: () => import('@/views/user/user.vue'),
     },
+
+    {
+        path: '/detail',
+        name: 'detail',
+        component: () => import('@/views/detail/detail.vue'),
+    },
 ];
 
 const router = createRouter({

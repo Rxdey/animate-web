@@ -5,7 +5,7 @@
         <component :is="Component" />
       </keep-alive>
     </router-view>
-    <nav class="nav-bar">
+    <nav class="nav-bar" v-if="isShowList">
       <router-link class="nav-item" v-for="nav in navList" :to="nav.path">
         <span role="link">{{ nav.name }}</span>
       </router-link>
@@ -15,8 +15,13 @@
 
 <script setup lang="ts">
 import { useMainStore } from '@/store/modules/useMainStore';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const mainStore = useMainStore();
+const showNavList = ['/home', '/search', '/user'];
+const isShowList = computed(() => showNavList.includes(route.path));
 
 const navList = [
   { name: 'Home', path: '/home' },
@@ -26,8 +31,7 @@ const navList = [
 </script>
 
 <style lang="less">
-@import '@/assets/css/common.less';
-@import '@/assets/css/reset.less';
+
 
 html,
 body {
