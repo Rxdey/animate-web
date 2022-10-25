@@ -9,7 +9,7 @@ export type SearchRespose = {
     name?: string;
     cover?: string;
     author?: string;
-    animaId: string | number;
+    animateId: string | number;
 }
 
 /**
@@ -24,15 +24,15 @@ export const searchFeatch = (params: SearchParams): Promise<ResponseType<SearchR
 
 
 type CollectionParams = {
-    userId: string;
-    source?: string;
-    animateId: string | number;
+    userId: string|number;
+    source?: string|number;
+    animateId: string|number;
     animateName: string;
     cover: string;
-    state?: string | string;
+    state?: number;
 }
 type CollectionRespose = {
-    state: number | string
+    state: number|string
 }
 
 /**
@@ -46,9 +46,9 @@ export const collectionFeatch = (params: CollectionParams): Promise<ResponseType
 }, params);
 
 type getCollectionParams = {
-    userId: string;
-    source?: string;
-    animateId: string;
+    userId: string | number;
+    source: string | number;
+    animateId: string | number;
 }
 /**
  * 是否收藏
@@ -62,20 +62,20 @@ export const getCollectionFeatch = (params: getCollectionParams): Promise<Respon
 
 
 export type detailParams = {
-    animaId: string | number;
+    animateId: string | number;
 }
 export type detailChapter = {
-    chapter: string;
-    chapterUrl: string;
-    chapterId: string | number;
-    animaId: string | number;
+    chapter?: string;
+    chapterUrl?: string;
+    chapterId?: string | number;
+    animateId?: string | number;
 }
 export type detailRespose = {
     name?: string,
     desc?: string,
     cover?: string,
     author?: string,
-    state?: string | number,
+    state?: number,
     chapterList?: detailChapter[]
 }
 /**
@@ -90,12 +90,12 @@ export const detailFeatch = (params: detailParams): Promise<ResponseType<detailR
 
 
 type getChapterParams = {
-    animaId: string | number;
+    animateId: string | number;
     chapterId: string | number;
 }
 type getChapterRespose = {
     imgUrl: string;
-    animaId: string | number;
+    animateId: string | number;
     chapterId: string | number;
     index: string | number;
     total: string | number;

@@ -15,7 +15,7 @@ import { ref, onMounted, computed } from 'vue';
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, calc(33.33% - var(--column-gap)));
-  grid-auto-rows: minmax(min-content,max-content);
+  // grid-auto-rows: minmax(min-content,max-content);
   justify-content: center;
   row-gap: 32px;
   column-gap: var(--column-gap);

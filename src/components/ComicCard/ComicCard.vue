@@ -16,9 +16,9 @@ const props = defineProps({
 
 <style lang="less" scope>
 .comic-card {
-  height: 280px;
+  // height: 280px;
   // border-radius: 16px;
-  background: url(@/assets/img/default.png) no-repeat center;
+  // background: url(@/assets/img/default.png) no-repeat center;
   background-size: cover;
   // box-shadow: inset 0 0 16px var(--shaodw-color);
 }

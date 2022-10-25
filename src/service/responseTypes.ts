@@ -15,8 +15,8 @@ export interface CollectionData {
     lastChapter?: string;
     lastChapterName?: string;
     lastPage?: string;
-    isShow: string;
+    isShow: string|number;
     updateDate: string;
     createDate: string;
-    state: string;
+    state: number;
 }

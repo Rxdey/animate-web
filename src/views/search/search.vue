@@ -27,7 +27,7 @@
     </div>
     <div class="result-list" v-show="!showHistoryList">
       <ComicList>
-        <SearchCard v-for="comic in searchList" :key="comic.animaId" :data="comic" @click="toDetail(comic)"/>
+        <SearchCard v-for="comic in searchList" :key="comic.animateId" :data="comic" @click="toDetail(comic)"/>
       </ComicList>
     </div>
   </div>
@@ -75,11 +75,11 @@ const onInput = (e: any) => {
   showHistoryList.value = !e.target.value;
 }
 const toDetail = (comic: SearchRespose) => {
-  const { animaId } = comic;
+  const { animateId } = comic;
   router.push({
     path: '/detail',
     query: {
-      animaId
+      animateId
     }
   });
 }
