@@ -15,7 +15,7 @@
         }
         .van-tab__panel {
             height: 100%;
-            overflow: hidden;
+            overflow-y: auto;
         }
     }
 }
@@ -44,4 +44,18 @@
     display: flex;
     flex-flow: row nowrap;
     margin-bottom: 16px;
+  }
+
+  .empty {
+    text-align: center;
+    padding-top: 60px;
+    color: var(--color-gray);
+    font-size: var(--font-s);
+    img {
+      width: 200px;
+      display: inline-block;
+    }
+  }
+  .home-list {
+    padding: 16px;
   }

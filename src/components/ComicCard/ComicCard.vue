@@ -1,25 +1,41 @@
 <template>
-  <div class="comic-card shadow"></div>
+  <div class="comic-card" v-if="data">
+    <div class="comic-wrap shadow">
+      <img v-lazy="data.cover" :alt="data.animateName" :key="data.cover"/>
+    </div>
+    <div class="txt-shadow name ov-2">{{ data.animateName }}</div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { CollectionData } from '@/service/responseTypes';
 
-const props = defineProps({
-  data: {
-    type: Object,
-    default: () => {}
-  }
+type Props = {
+  data?: CollectionData;
+};
+const props = withDefaults(defineProps<Props>(), {
+  data: undefined
 });
 </script>
 
 <style lang="less" scope>
 .comic-card {
-  // height: 280px;
-  // border-radius: 16px;
-  // background: url(@/assets/img/default.png) no-repeat center;
-  background-size: cover;
+    // background-color: var(--color-bg);
+  .comic-wrap {
+    height: 280px;
+    margin-bottom: 8px;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .name {
+    color: var(--color-white);
+    font-size: var(--font-s);
+  }
   // box-shadow: inset 0 0 16px var(--shaodw-color);
 }
 </style>
