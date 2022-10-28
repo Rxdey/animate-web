@@ -10,6 +10,7 @@
         <span role="link">{{ nav.name }}</span>
       </router-link>
     </nav>
+    <CatPaw />
   </div>
 </template>
 
@@ -17,6 +18,7 @@
 import { useMainStore } from '@/store/modules/useMainStore';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+import CatPaw from '@/components/CatPaw/CatPaw.vue';
 
 const route = useRoute();
 const mainStore = useMainStore();
@@ -24,9 +26,9 @@ const showNavList = ['/home', '/search', '/user'];
 const isShowList = computed(() => showNavList.includes(route.path));
 
 const navList = [
-  { name: 'Home', path: '/home' },
-  { name: 'Search', path: '/search' },
-  { name: 'User', path: '/user' }
+  { name: '收藏', path: '/home' },
+  { name: '找找？', path: '/search' },
+  { name: 'ME', path: '/user' }
 ];
 </script>
 
@@ -50,6 +52,7 @@ body {
   display: flex;
   flex-flow: column;
   overflow: hidden;
+  position: relative;
 }
 .page {
   flex: 1;
@@ -63,25 +66,9 @@ body {
   padding: 16px 32px 32px 32px;
   position: relative;
   align-items: flex-end;
-  // &::before,
-  // &::after {
-  //   content: none;
-  //   position: absolute;
-  //   width: 10rem;
-  //   height: 6px;
-  //   background-color: var(--border-color);
-  //   box-shadow: 4px 4px 0 var(--shaodw-color);
-  //   top: 0;
-  // }
-  // &::after {
-  //   transform: rotate(5deg);
-  //   left: 0;
-  // }
-  // &::before {
-  //   left: -4.82rem;
-  //   transform: rotate(-15deg);
-  //   content: none;
-  // }
+  background-color: var(--color-purple);
+  transform: skewY(5deg);
+  bottom: 15px;
   .nav-item {
     --fs: 28px;
     --fm: 36px;
@@ -92,6 +79,7 @@ body {
     position: relative;
     line-height: 1;
     font-size: var(--fm);
+    transform: skewY(-10deg);
     span {
       position: relative;
       z-index: 1;
@@ -113,7 +101,7 @@ body {
         box-shadow: 0px 0px 8px var(--shaodw-color);
         border-bottom: 5px solid var(--border-color);
         border-left: 16px solid var(--border-color);
-        transform: skewY(-10deg);
+        transform: skew(-10deg);
       }
     }
     &:nth-child(2) {

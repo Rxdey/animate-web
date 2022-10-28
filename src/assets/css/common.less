@@ -38,24 +38,46 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+
 .shadow {
   border: 2px solid var(--border-color);
   box-shadow: 0px 0px 4px var(--border-color);
   background: #fff;
   position: relative;
   transform-style: preserve-3d;
-  &::after {
+  &::after,
+  &::before {
     content: '';
     position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 10px;
-    top: 10px;
+    width: 90%;
+    height: 90%;
     background-color: var(--shaodw-color);
     transform: translateZ(-10px);
     box-shadow: 0px 0px 10px var(--shaodw-color);
   }
+  &::after {
+    left: -8px;
+    top: -8px;
+  }
+  &::before {
+    bottom: -8px;
+    right: -8px;
+    background-color: var(--border-color);
+  }
 }
+.border-shadow {
+  .shadow;
+  &::after {
+    width: 100%;
+    height: 100%;
+    left: 10px;
+    top: 10px;
+  }
+  &::before {
+    content: none;
+  }
+}
+
 .border {
   border: 4px solid var(--border-color);
   background: #fff;
@@ -92,14 +114,13 @@ body {
     font-weight: normal;
     color: #333;
     text-shadow: 2px 2px 0 var(--color-orange);
-    transition: all .3s;
+    transition: all 0.3s;
   }
 }
 
-
 // .van-dialog {
 //   background-color: var(--color-deeppurple30)!important;
-  
+
 // }
 // .van-dialog--round-button .van-dialog__message, .van-dialog__header {
 //   color: var(--color-white)!important;
@@ -110,14 +131,28 @@ body {
   --van-dialog-background: var(--color-deeppurple30);
   --van-action-bar-background: var(--color-deeppurple30);
 }
-.van-action-bar-button--last, .van-action-bar-button--first {
-  border-radius: 0!important;
+.van-action-bar-button--last,
+.van-action-bar-button--first {
+  border-radius: 0 !important;
 }
 .van-button {
-  .shadow!important;
+  .shadow !important;
 }
-.van-dialog--round-button .van-dialog__confirm, .van-dialog__header {
+.van-dialog--round-button .van-dialog__confirm,
+.van-dialog__header {
   color: var(--color-orange);
   font-size: var(--font-l);
   // .txt-shadow;
+}
+
+.empty {
+  text-align: center;
+  padding-top: 60px;
+  color: var(--color-gray);
+  font-size: var(--font-s);
+  margin: 0 0 32px 0;
+  img {
+    width: 200px;
+    display: inline-block;
+  }
 }

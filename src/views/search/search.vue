@@ -17,17 +17,28 @@
         </div>
       </div>
     </div>
-    <div class="history" v-show="historyList.length && showHistoryList">
-      <ul class="history--list">
-        <li class="history--item shadow" v-for="(item, i) in historyList" :key="i" @click="onSearch(item)">
-          <div>{{ item }}</div>
-        </li>
-      </ul>
-      <div class="clearAll" @click="onClear">清除搜索记录</div>
+
+    <div class="search-loading" v-show="loading">
+      <img src="/img/loading.gif" />
+      <p>加载！加载中~~</p>
     </div>
+
+    <template v-if="historyList.length && showHistoryList && !loading">
+      <div class="history">
+        <ul class="history--list">
+          <li class="history--item border-shadow" v-for="(item, i) in historyList" :key="i" @click="onSearch(item)">
+            <div>{{ item }}</div>
+          </li>
+        </ul>
+        <div class="clearAll" @click="onClear">清除搜索记录</div>
+      </div>
+      <VanEmpty image="/img/empty.gif" class="empty">
+        <span>什么都没有~</span>
+      </VanEmpty>
+    </template>
     <div class="result-list" v-show="!showHistoryList">
       <ComicList>
-        <SearchCard v-for="comic in searchList" :key="comic.animateId" :data="comic" @click="toDetail(comic)"/>
+        <SearchCard v-for="comic in searchList" :key="comic.animateId" :data="comic" @click="toDetail(comic)" />
       </ComicList>
     </div>
   </div>
@@ -47,6 +58,7 @@ const searchKey = ref('');
 const searchList: Ref<SearchRespose[]> = ref([]);
 const historyList: Ref<string[]> = ref([]);
 const showHistoryList = ref(true);
+const loading = ref(false);
 
 /* TODO ==> 搜索 */
 const onSearch = async (key = '') => {
@@ -58,11 +70,13 @@ const onSearch = async (key = '') => {
   history.unshift(searchKey.value.trim());
   rxLocalStorage.setItem('search-history', JSON.stringify(history));
   historyList.value = history;
+  loading.value = true;
+  showHistoryList.value = false;
   const res = await searchFeatch({
     searchKey: searchKey.value.trim()
   });
+  loading.value = false;
   const { state, msg, data } = res;
-  showHistoryList.value = false;
   if (state !== 1) return;
   searchList.value = data || [];
 };
@@ -73,7 +87,7 @@ const onClear = () => {
 };
 const onInput = (e: any) => {
   showHistoryList.value = !e.target.value;
-}
+};
 const toDetail = (comic: SearchRespose) => {
   const { animateId } = comic;
   router.push({
@@ -82,7 +96,7 @@ const toDetail = (comic: SearchRespose) => {
       animateId
     }
   });
-}
+};
 onMounted(() => {
   historyList.value = JSON.parse(rxLocalStorage.getItem('search-history') || '[]');
 });
@@ -136,5 +150,18 @@ onMounted(() => {
   flex: 1;
   min-height: 200px;
   overflow-y: auto;
+}
+.search-loading {
+  text-align: center;
+  margin-top: 100px;
+  color: #fff;
+  img {
+    width: 200px;
+    display: inline-block;
+  }
+  p {
+    margin: 16px 0;
+    font-size: var(--font-s);
+  }
 }
 </style>

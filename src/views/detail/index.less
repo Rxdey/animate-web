@@ -76,7 +76,7 @@
     padding: 16px 32px;
     display: flex;
     flex-flow: row nowrap;
-    align-items: center;
+    margin-bottom: 50px;
     .detail-bar {
       flex: 1;
       min-width: 100px;
@@ -85,6 +85,22 @@
         height: 58px;
       }
     }
+  }
+  .van-skeleton {
+    padding: 32px 16px;
+    &.button-skeleton {
+      width: 320px;
+      .van-skeleton__row {
+        width: 100%!important;
+        padding: 12px 32px;
+        height: 70px;
+      }
+    }
+  }
+  .van-skeleton__avatar {
+    width: 180px;
+    height: 240px;
+    border-radius: 0;
   }
 }
 .tool-bar {
