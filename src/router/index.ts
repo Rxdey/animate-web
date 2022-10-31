@@ -10,24 +10,41 @@ const routes: Array<RouteRecordRaw> = [
         name: 'home',
         component: () => import('@/views/home/home.vue'),
         meta: {
-            title: 'Home'
+            title: '收藏'
         }
     },
     {
         path: '/search',
         name: 'search',
         component: () => import('@/views/search/search.vue'),
+        meta: {
+            title: '找找'
+        }
     },
     {
         path: '/user',
         name: 'user',
         component: () => import('@/views/user/user.vue'),
+        meta: {
+            title: 'ME'
+        }
     },
 
     {
         path: '/detail',
         name: 'detail',
         component: () => import('@/views/detail/detail.vue'),
+        meta: {
+            title: '详情'
+        }
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: () => import('@/views/login/login.vue'),
+        meta: {
+            title: '登录'
+        }
     },
 ];
 

@@ -16,7 +16,7 @@
   --box-padding: 32px;
   --border-radius: 16px;
 
-  --shaodw-color: var(--color-purple);
+  --shadow-color: var(--color-purple);
   --border-color: var(--color-cyan);
 }
 
@@ -51,17 +51,17 @@ body {
     position: absolute;
     width: 90%;
     height: 90%;
-    background-color: var(--shaodw-color);
+    background-color: var(--shadow-color);
     transform: translateZ(-10px);
-    box-shadow: 0px 0px 10px var(--shaodw-color);
+    box-shadow: 0px 0px 8px var(--shadow-color);
   }
   &::after {
-    left: -8px;
-    top: -8px;
+    left: -6px;
+    top: -6px;
   }
   &::before {
-    bottom: -8px;
-    right: -8px;
+    bottom: -6px;
+    right: -6px;
     background-color: var(--border-color);
   }
 }
@@ -81,7 +81,7 @@ body {
 .border {
   border: 4px solid var(--border-color);
   background: #fff;
-  box-shadow: 0px 0px 4px var(--shaodw-color);
+  box-shadow: 0px 0px 4px var(--shadow-color);
 }
 
 .tab-bar {
@@ -130,6 +130,8 @@ body {
   --van-text-color: var(--color-white);
   --van-dialog-background: var(--color-deeppurple30);
   --van-action-bar-background: var(--color-deeppurple30);
+  --van-button-warning-color: var(--color-deeppurple30);
+  --van-toast-background: var(--color-deeppurple30);
 }
 .van-action-bar-button--last,
 .van-action-bar-button--first {
@@ -143,16 +145,4 @@ body {
   color: var(--color-orange);
   font-size: var(--font-l);
   // .txt-shadow;
-}
-
-.empty {
-  text-align: center;
-  padding-top: 60px;
-  color: var(--color-gray);
-  font-size: var(--font-s);
-  margin: 0 0 32px 0;
-  img {
-    width: 200px;
-    display: inline-block;
-  }
 }

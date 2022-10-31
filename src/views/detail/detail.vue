@@ -95,7 +95,7 @@ const onRead = (desc: detailChapter) => {
 // 订阅/取消
 const onCollect = async (state: number) => {
   const params = {
-    userId: 1,
+    // userId: 1,
     source: 1,
     state,
     animateId: animateId.value,
@@ -116,7 +116,7 @@ const onCollect = async (state: number) => {
 };
 // 获取是否订阅
 const getCollect = async (animateId: string) => {
-  const res = await getCollectionFeatch({ userId: 1, source: 1, animateId });
+  const res = await getCollectionFeatch({ source: 1, animateId });
   const { data, state } = res;
   collectState.value = data ? data.state : 0;
 };

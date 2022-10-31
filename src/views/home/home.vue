@@ -15,9 +15,10 @@
           </template>
           <van-pull-refresh v-model="refreshing" @refresh="onRefresh" class="scroll-list">
             <VanList v-model:loading="tab.loading" :finished="tab.finish" :offset="30" @load="getCollectionAll">
-              <VanEmpty v-if="!tab.list.length" image="/img/empty.gif" class="empty">
+              <Load v-if="!tab.list.length && loadingStatus" type="loading" />
+              <Load v-if="!tab.list.length && !loadingStatus" type="empty">
                 <span v-show="!loadingStatus">什么都没有~</span>
-              </VanEmpty>
+              </Load>
               <ComicList v-else class="home-list">
                 <ComicCard v-for="(item, i) in tab.list" :key="i" :data="item" @click="toDetail(item)"></ComicCard>
               </ComicList>
@@ -34,6 +35,7 @@ import { ref, onMounted, computed, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import ComicList from '@/components/ComicList/ComicList.vue';
 import ComicCard from '@/components/ComicCard/ComicCard.vue';
+import Load from '@/components/Load/Load.vue';
 import { getAnimateListFeatch } from '@/service/model/comic';
 import { CollectionData } from '@/service/responseTypes';
 
@@ -59,7 +61,7 @@ const loadingStatus = ref(false);
 
 const getCollectionAll = async (cb = () => {}) => {
   const query = {
-    userId: 1,
+    // userId: 1,
     state: current.value.state,
     source: 1,
     page: current.value.page,
@@ -94,7 +96,7 @@ const onRefresh = () => {
         refreshing.value = false;
       }, 500);
     });
-  })
+  });
 };
 const toDetail = (comic: CollectionData) => {
   const { animateId } = comic;

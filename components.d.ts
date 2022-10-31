@@ -7,16 +7,21 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    Button: typeof import('./src/components/Button/Button.vue')['default']
     CatPaw: typeof import('./src/components/CatPaw/CatPaw.vue')['default']
     Cell: typeof import('./src/components/Cell/Cell.vue')['default']
     ComicCard: typeof import('./src/components/ComicCard/ComicCard.vue')['default']
     ComicList: typeof import('./src/components/ComicList/ComicList.vue')['default']
+    Load: typeof import('./src/components/Load/Load.vue')['default']
+    Loading: typeof import('./src/components/Load/Loading.vue')['default']
+    MyButton: typeof import('./src/components/MyButton/MyButton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchCard: typeof import('./src/components/SearchCard/SearchCard.vue')['default']
     VanEmpty: typeof import('vant/es')['Empty']
     VanIcon: typeof import('vant/es')['Icon']
     VanList: typeof import('vant/es')['List']
+    VanLoading: typeof import('vant/es')['Loading']
     VanPullRefresh: typeof import('vant/es')['PullRefresh']
     VanSkeleton: typeof import('vant/es')['Skeleton']
     VanTab: typeof import('vant/es')['Tab']

@@ -36,6 +36,6 @@ const props = withDefaults(defineProps<Props>(), {
     color: var(--color-white);
     font-size: var(--font-s);
   }
-  // box-shadow: inset 0 0 16px var(--shaodw-color);
+  // box-shadow: inset 0 0 16px var(--shadow-color);
 }
 </style>

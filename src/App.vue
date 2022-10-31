@@ -98,7 +98,7 @@ body {
         left: 50%;
         margin-left: -60px;
         transform: skew(15deg);
-        box-shadow: 0px 0px 8px var(--shaodw-color);
+        box-shadow: 0px 0px 8px var(--shadow-color);
         border-bottom: 5px solid var(--border-color);
         border-left: 16px solid var(--border-color);
         transform: skew(-10deg);

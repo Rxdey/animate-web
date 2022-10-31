@@ -24,7 +24,7 @@ export const searchFeatch = (params: SearchParams): Promise<ResponseType<SearchR
 
 
 type CollectionParams = {
-    userId: string|number;
+    // userId: string|number;
     source?: string|number;
     animateId: string|number;
     animateName: string;
@@ -46,7 +46,7 @@ export const collectionFeatch = (params: CollectionParams): Promise<ResponseType
 }, params);
 
 type getCollectionParams = {
-    userId: string | number;
+    // userId: string | number;
     source: string | number;
     animateId: string | number;
 }
@@ -112,7 +112,7 @@ export const getChapterFeatch = (params: getChapterParams): Promise<ResponseType
 
 
 type getAnimateListParams = {
-    userId: string | number;
+    // userId: string | number;
     source: string | number;
     pageSize?: number;
     pageNo?: number;

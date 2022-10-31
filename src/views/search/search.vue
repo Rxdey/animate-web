@@ -19,8 +19,9 @@
     </div>
 
     <div class="search-loading" v-show="loading">
-      <img src="/img/loading.gif" />
-      <p>加载！加载中~~</p>
+      <Load type="loading">
+        <p>加载！加载中~~</p>
+      </Load>
     </div>
 
     <template v-if="historyList.length && showHistoryList && !loading">
@@ -32,10 +33,10 @@
         </ul>
         <div class="clearAll" @click="onClear">清除搜索记录</div>
       </div>
-      <VanEmpty image="/img/empty.gif" class="empty">
-        <span>什么都没有~</span>
-      </VanEmpty>
     </template>
+    <Load type="empty" v-if="historyList.length && !loading">
+      <span>什么都没有~</span>
+    </Load>
     <div class="result-list" v-show="!showHistoryList">
       <ComicList>
         <SearchCard v-for="comic in searchList" :key="comic.animateId" :data="comic" @click="toDetail(comic)" />
@@ -48,6 +49,7 @@
 import { ref, onMounted, computed, Ref } from 'vue';
 import ComicList from '@/components/ComicList/ComicList.vue';
 import SearchCard from '@/components/SearchCard/SearchCard.vue';
+import Load from '@/components/Load/Load.vue';
 import { useRouter, useRoute } from 'vue-router';
 import { searchFeatch } from '@/service/model/comic';
 import { rxLocalStorage } from '@/utils';

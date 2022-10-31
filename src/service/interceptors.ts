@@ -1,5 +1,7 @@
-import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
+import axios, { AxiosRequestConfig, AxiosInstance, RawAxiosRequestHeaders } from 'axios';
 import qs from 'qs';
+import Cookies from 'js-cookie';
+import { showToast } from 'vant';
 
 axios.defaults.withCredentials = true;
 
@@ -39,8 +41,9 @@ const defaultInstance = (config: AxiosCustomConfig) => {
   const instance: AxiosInstance = axios.create(config);
   instance.interceptors.request.use((res) => ({
     ...res,
-    headers: {
+    headers: <RawAxiosRequestHeaders & { token?: string }>{
       ...res.headers,
+      token: Cookies.get('token')
     },
   }));
   instance.interceptors.response.use((response) => response, (error) => {
@@ -50,9 +53,16 @@ const defaultInstance = (config: AxiosCustomConfig) => {
       404: '找不到请求地址',
       500: '系统异常',
       504: '请求超时，请检查网络环境并重试',
+      401: '登录认证过期或失败，请重新登录'
     };
     console.log({ message: `ERROR: ${status} - ${action[status] || '系统异常'} >_<` });
     console.error(`接口:${error.config.url}  异常 --- ${error.message}`);
+    showToast(action[status] || '系统异常');
+    if (status === 401) {
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 2000)
+    }
     return error;
   });
   return instance;
