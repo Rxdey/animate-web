@@ -53,6 +53,9 @@
       </van-skeleton>
     </div>
   </div>
+  <!-- <van-popup>
+
+  </van-popup> -->
 </template>
 
 <script setup lang="ts">
@@ -61,19 +64,19 @@ import { useRouter, useRoute } from 'vue-router';
 // import { detailFeatch } from '@/service/model/comic';
 import { useComicStore } from '@/store/modules/useComicStore';
 import { detailRespose, detailChapter, getCollectionFeatch, collectionFeatch } from '@/service/model/comic';
-import { showDialog, showToast, Loading } from 'vant';
+import { showToast, Loading } from 'vant';
 import { CollectionData } from '@/service/responseTypes';
 
 const route = useRoute();
-const loading = ref(false);
+const loading = ref(false); // 加载动画
 const animateId: ComputedRef<string> = computed(() => route.query.animateId as string);
 const comitStore = useComicStore();
 const comicDetail: Ref<detailRespose> = ref({});
 const sortType = ref(false);
 const activeHistory = ref('');
 const collectState: Ref<number> = ref(0);
-
 const collectLoading = ref(false);
+const showAllChapter = ref(false);
 
 // 要展示的列表
 const chapterLimit = computed(() => {
@@ -89,8 +92,14 @@ const chapterLimit = computed(() => {
   return chapter;
 });
 
+// 继续/开始阅读
 const onRead = (desc: detailChapter) => {
   console.log(desc);
+  const { chapter, animateId } = desc;
+  if (chapter === '...') {
+    showAllChapter.value = true;
+    return;
+  }
 };
 // 订阅/取消
 const onCollect = async (state: number) => {
