@@ -60,11 +60,18 @@ const handleLogin = async () => {
   const { token } = data;
   Cookies.set('token', token || '');
   showToast('登录成功~');
+  Cookies.set('userName', userName.value);
+  Cookies.set('password', password.value);
   loading.value = true;
   setTimeout(() => {
     router.push('/home');
   }, 1000);
 };
+
+onMounted(() => {
+  userName.value = Cookies.get('userName') || '';
+  password.value = Cookies.get('password') || '';
+})
 </script>
 
 <style lang="less" scope>

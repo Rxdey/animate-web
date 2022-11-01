@@ -34,7 +34,8 @@
           <div class="detail--chapterlist">
             <div class="detail__chapteritem" v-for="(item, i) in chapterLimit" :key="i">
               <div class="chapter-card border-shadow" :class="{ active: activeHistory === item.chapterId }" @click.stop="onRead(item)">
-              <p class="ov-1">{{ item.chapter }}</p></div>
+                <p class="ov-1">{{ item.chapter }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -52,10 +53,11 @@
         <div class="shadow detail-button">开始阅读</div>
       </van-skeleton>
     </div>
+    <van-popup v-model:show="showAllChapter" position="bottom" :style="{ height: '70%' }" round>
+      <div class="current-popup">
+      </div>
+    </van-popup>
   </div>
-  <!-- <van-popup>
-
-  </van-popup> -->
 </template>
 
 <script setup lang="ts">
@@ -76,7 +78,7 @@ const sortType = ref(false);
 const activeHistory = ref('');
 const collectState: Ref<number> = ref(0);
 const collectLoading = ref(false);
-const showAllChapter = ref(false);
+const showAllChapter = ref(false); // 所有章节弹窗
 
 // 要展示的列表
 const chapterLimit = computed(() => {
