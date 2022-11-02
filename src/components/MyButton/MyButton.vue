@@ -2,7 +2,7 @@
   <button class="my-button shadow" @click.stop="onClick" :style="{
     '--font-size': currentSize
   }">
-    <van-loading v-if="loading" />
+    <van-loading v-if="loading" :size="currentSize" />
     <span v-else>
       <slot></slot>
     </span>
@@ -21,7 +21,7 @@ const sizeList = {
 const emit = defineEmits(['click']);
 type Props = {
   loading?: boolean;
-  size: 'small' | 'default' | 'larage';
+  size?: 'small' | 'default' | 'larage';
   disabled?: boolean;
 };
 const props = withDefaults(defineProps<Props>(), {
@@ -30,9 +30,9 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'default'
 });
 const currentSize = computed(() => sizeList[props.size]);
-const onClick = e => {
+const onClick = () => {
   if (props.disabled || props.loading) return;
-  emit('click', e);
+  emit('click');
 };
 </script>
 
@@ -61,8 +61,8 @@ const onClick = e => {
   }
   &::before {
     // border-radius: 100px;
-    border-top-right-radius: 50px;
-    border-bottom-left-radius: 50px;
+    border-top-right-radius: 30px;
+    border-bottom-left-radius: 30px;
   }
   &:active {
     background-color: #e9e9e9;

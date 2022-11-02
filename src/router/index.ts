@@ -39,6 +39,14 @@ const routes: Array<RouteRecordRaw> = [
         }
     },
     {
+        path: '/reader',
+        name: 'reader',
+        component: () => import('@/views/reader/reader.vue'),
+        meta: {
+            title: '(*^_^*)'
+        }
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import('@/views/login/login.vue'),

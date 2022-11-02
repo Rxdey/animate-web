@@ -12,9 +12,9 @@ export interface CollectionData {
     animateName: string;
     cover?: string;
     lastChapterId?: string | number;
-    lastChapter?: string;
+    lastChapter?: number|string;
     lastChapterName?: string;
-    lastPage?: string;
+    lastPage?: string|number;
     isShow: string|number;
     updateDate: string;
     createDate: string;

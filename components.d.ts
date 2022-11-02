@@ -7,13 +7,11 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    Button: typeof import('./src/components/Button/Button.vue')['default']
     CatPaw: typeof import('./src/components/CatPaw/CatPaw.vue')['default']
     Cell: typeof import('./src/components/Cell/Cell.vue')['default']
     ComicCard: typeof import('./src/components/ComicCard/ComicCard.vue')['default']
     ComicList: typeof import('./src/components/ComicList/ComicList.vue')['default']
     Load: typeof import('./src/components/Load/Load.vue')['default']
-    Loading: typeof import('./src/components/Load/Loading.vue')['default']
     MyButton: typeof import('./src/components/MyButton/MyButton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

@@ -93,12 +93,12 @@ type getChapterParams = {
     animateId: string | number;
     chapterId: string | number;
 }
-type getChapterRespose = {
-    imgUrl: string;
-    animateId: string | number;
-    chapterId: string | number;
-    index: string | number;
-    total: string | number;
+export type getChapterRespose = {
+    imgUrl?: string;
+    animateId?: string | number;
+    chapterId?: string | number;
+    index?: string | number;
+    total?: string | number;
 }
 /**
  * 获取当前话内容
@@ -127,4 +127,23 @@ type getAnimateListParams = {
 export const getAnimateListFeatch = (params: getAnimateListParams): Promise<ResponseType<CollectionData[]>> => request({
     url: '/getAnimateList',
     method: 'get'
+}, params);
+
+
+export type updateParams = {
+    animateId: string|number;
+    lastChapterId?: string|number;
+    lastChapterName?: string|number;
+    lastChapter?: string|number;
+    lastPage?: string|number;
+    source?: number;
+}
+/**
+ * 更新记录信息
+ * @param params 
+ * @returns 
+ */
+export const update = (params: updateParams): Promise<ResponseType<any>> => request({
+    url: '/update',
+    method: 'post'
 }, params);

@@ -32,11 +32,7 @@
             </div>
           </div>
           <div class="detail--chapterlist">
-            <div class="detail__chapteritem" v-for="(item, i) in chapterLimit" :key="i">
-              <div class="chapter-card border-shadow" :class="{ active: activeHistory === item.chapterId }" @click.stop="onRead(item)">
-                <p class="ov-1">{{ item.chapter }}</p>
-              </div>
-            </div>
+            <ChapterItem v-for="(item, i) in chapterLimit" :key="i" :data="item" :active-history="activeHistory" @click.stop="onRead(item)" />
           </div>
         </div>
       </van-skeleton>
@@ -49,59 +45,115 @@
           <img src="@/assets/img/like.png" v-else />
         </div>
       </div>
-      <van-skeleton :row="1" :loading="loading" class="button-skeleton">
-        <div class="shadow detail-button">开始阅读</div>
-      </van-skeleton>
+      <MyButton class="chapter-button" :loading="loading" @click="handleRead">
+        <p class="ov-1">{{ activeHistory ? `继续阅读 (${lastChapterName})` : '开始阅读' }}</p>
+      </MyButton>
     </div>
     <van-popup v-model:show="showAllChapter" position="bottom" :style="{ height: '70%' }" round>
-      <div class="current-popup">
+      <div class="current-popup" v-if="showAllChapter">
+        <div class="chapter-nav">
+          <div class="chapter-nav__left"></div>
+          <div class="chapter-nav__title">全部章节</div>
+          <div class="chapter-nav__right">
+            <van-icon name="cross" @click="showAllChapter = false" />
+          </div>
+        </div>
+        <div class="chapter-body">
+          <div class="popup-chapterlist">
+            <ChapterItem v-for="(item, i) in chapterList" :key="i" :data="item" :active-history="activeHistory" @click.stop="onRead(item)" />
+          </div>
+        </div>
       </div>
     </van-popup>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, ComputedRef, Ref, toRef } from 'vue';
+import { ref, onMounted, computed, ComputedRef, Ref, toRef, onActivated } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 // import { detailFeatch } from '@/service/model/comic';
 import { useComicStore } from '@/store/modules/useComicStore';
+import ChapterItem from './components/ChapterItem.vue';
 import { detailRespose, detailChapter, getCollectionFeatch, collectionFeatch } from '@/service/model/comic';
 import { showToast, Loading } from 'vant';
 import { CollectionData } from '@/service/responseTypes';
+import { changeTitle } from '@/utils';
 
 const route = useRoute();
+const router = useRouter();
 const loading = ref(false); // 加载动画
 const animateId: ComputedRef<string> = computed(() => route.query.animateId as string);
 const comitStore = useComicStore();
-const comicDetail: Ref<detailRespose> = ref({});
+const comicDetail = ref<detailRespose>({}); // 详情原始数据
+const chapterList = ref<detailChapter[]>([]); // 章节列表(会重排序)
 const sortType = ref(false);
-const activeHistory = ref('');
 const collectState: Ref<number> = ref(0);
 const collectLoading = ref(false);
 const showAllChapter = ref(false); // 所有章节弹窗
+const collectDetail = ref<CollectionData | null>(null); // 获取历史阅读记录，之前忘了加上
 
+const activeHistory = computed(() => collectDetail.value?.lastChapterId || '');
+const lastChapterName = computed(() => {
+  const res = chapterList.value.find(item => item.chapterId === collectDetail.value?.lastChapterId);
+  return res ? res.chapter : '';
+});
 // 要展示的列表
 const chapterLimit = computed(() => {
   const len = 16;
-  const chapterList = comicDetail.value.chapterList || [];
-  if (!chapterList.length) return [];
+  if (!chapterList.value.length) return [];
   const chapter = [];
-  chapter.push(...chapterList.slice(0, len - 2));
-  if (chapterList.length > len) {
+  chapter.push(...chapterList.value.slice(0, len - 2));
+  if (chapterList.value.length > len) {
     chapter.push({ chapter: '...' });
-    chapter.push(chapterList[chapterList.length - 1]);
+    chapter.push(chapterList.value[chapterList.value.length - 1]);
   }
   return chapter;
 });
 
 // 继续/开始阅读
+const handleRead = async (chapterId?: string | number, chapterName?: string) => {
+  const updateParams = {
+    animateId: animateId.value,
+    lastChapterId: chapterId,
+    lastChapter: 0 as string | number, // 历史章节索引
+    lastPage: 0 as string | number
+  };
+  const { lastChapter, lastChapterId, lastPage } = collectDetail.value || {};
+  // 点击的开始/继续阅读按钮
+  if (!chapterId) {
+    if (!comicDetail.value.chapterList) return;
+    const current = comicDetail.value?.chapterList[0];
+    if (!collectDetail.value?.lastChapterId) {
+      updateParams.lastChapterId = current.chapterId;
+      updateParams.lastChapter = 0;
+      updateParams.lastPage = 0;
+    } else {
+      updateParams.lastChapterId = lastChapterId;
+      updateParams.lastChapter = lastChapter || 0;
+      updateParams.lastPage = lastPage || 0;
+    }
+  }
+  // 同一话
+  if (chapterId === lastChapterId) {
+    updateParams.lastPage = lastPage || 0;
+  }
+  router.push({
+    path: '/reader',
+    query: updateParams
+  });
+};
+// 点击章节
 const onRead = (desc: detailChapter) => {
-  console.log(desc);
-  const { chapter, animateId } = desc;
+  const { chapter, chapterId } = desc;
   if (chapter === '...') {
     showAllChapter.value = true;
     return;
   }
+  if (!animateId) {
+    showToast('获取章节失败');
+    return;
+  }
+  handleRead(chapterId, chapter);
 };
 // 订阅/取消
 const onCollect = async (state: number) => {
@@ -130,6 +182,7 @@ const getCollect = async (animateId: string) => {
   const res = await getCollectionFeatch({ source: 1, animateId });
   const { data, state } = res;
   collectState.value = data ? data.state : 0;
+  if (data) collectDetail.value = data;
 };
 // 获取详情
 const getDetail = async (animateId: string) => {
@@ -138,18 +191,19 @@ const getDetail = async (animateId: string) => {
   const res = (await comitStore.GET_COMIC_DETAIL(animateId)) || {};
   loading.value = false;
   comicDetail.value = res;
+  chapterList.value = JSON.parse(JSON.stringify(res.chapterList || []));
+  changeTitle(res.name||'');
 };
 // 排序
 const onSort = () => {
   sortType.value = !sortType.value;
-  comicDetail.value = {
-    ...comicDetail.value,
-    chapterList: comicDetail.value.chapterList?.reverse()
-  };
+  chapterList.value = chapterList.value.reverse();
 };
+
 onMounted(() => {
   getDetail(animateId.value).then(() => {
     getCollect(animateId.value);
+    // 添加到观看历史
     onCollect(9);
   });
 });
