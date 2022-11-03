@@ -5,7 +5,7 @@ import { BASE_URL } from "./api.config";
 const BASE_CONFIG: AxiosCustomConfig = {
   method: 'get',
   url: '/',
-  timeout: 10000,
+  timeout: 100000,
   baseURL: BASE_URL,
   responseType: 'json',
   withCredentials: false,
