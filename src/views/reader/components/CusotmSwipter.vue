@@ -1,16 +1,18 @@
 <template>
-  <div class="CusotmSwiper">
-    <div class="swiper">
-      <div class="swiper-wrapper"></div>
-    </div>
-  </div>
+  <SwiperCom v-if="conf" v-bind="conf" @slide-change="onSlideChange" @init="onInit">
+    <swiper-slide v-for="(chapter, i) in list" :key="chapter.imgUrl" :virtual-index="chapter.imgUrl" :content="chapter">
+      <ImgCard :data="chapter"></ImgCard>
+    </swiper-slide>
+  </SwiperCom>
+  <!-- `${chapter.animateId}_${chapter.chapterId}_${chapter.index}` -->
 </template>
 
 <script setup lang="tsx">
 import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import Swiper from 'swiper';
-import 'swiper/css/swiper.min.css';
+import Swiper, { Virtual } from 'swiper';
+import { Swiper as SwiperCom, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
 import { getChapterRespose } from '@/service/model/comic';
 import ImgCard from './ImgCard.vue';
 
@@ -24,34 +26,39 @@ const props = withDefaults(
     activeIndex: 0
   }
 );
-const emit = defineEmits(['swiperChange']);
+
+const emit = defineEmits(['slideChange']);
 const virtualData = ref<getChapterRespose[]>([]);
-const mySwiper = ref<any>(null);
+const conf = ref<any>(null);
+
+const onSlideChange = (swiper: Swiper) => {
+  // activeIndex.value = swiper.activeIndex;
+  emit('slideChange', swiper.activeIndex, swiper.virtual.slides[swiper.activeIndex].props.content, swiper);
+};
+const onInit = (swiper: Swiper) => {
+  console.log('init', swiper);
+  emit('slideChange', swiper.activeIndex, swiper.virtual.slides[swiper.activeIndex].props.content, swiper);
+};
 
 onMounted(() => {
   virtualData.value = JSON.parse(JSON.stringify(props.list));
-  mySwiper.value = new Swiper('.swiper', {
-    zoom : true,
-    autoplay: false,
+  conf.value = {
+    modules: [Virtual],
     virtual: {
-      slides: virtualData.value,
-    //   addSlidesAfter: 5,
-    //   addSlidesBefore: 5,
-      renderSlide: (slides: getChapterRespose, index: number) => {
-        return <div class="swiper-slide"><ImgCard data={slides}></ImgCard></div>
-      }
+      addSlidesAfter: 5,
+      addSlidesBefore: 5
     }
-  });
-  console.log(mySwiper.value.virtual);
+  };
 });
 </script>
 
 <style lang="less" scope>
-.CusotmSwiper {
+// .CusotmSwiper {
+//   height: 100%;
+//   overflow: hidden;
+
+// }
+.swiper {
   height: 100%;
-  overflow: hidden;
-  .swiper {
-    height: 100%;
-  }
 }
 </style>

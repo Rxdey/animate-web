@@ -1,6 +1,6 @@
 <template>
   <div class="reader">
-    <CusotmSwipter v-if="currentImgList.length" :list="currentImgList" @swiperChange="onSwiperChange" ref="mySwiper"></CusotmSwipter>
+    <CusotmSwipter v-if="currentImgList.length" :list="currentImgList" @slideChange="onSwiperChange"></CusotmSwipter>
   </div>
 </template>
 
@@ -12,6 +12,7 @@ import { useComicStore } from '@/store/modules/useComicStore';
 import { changeTitle } from '@/utils';
 import { showToast } from 'vant';
 import CusotmSwipter from './components/CusotmSwipter.vue';
+import Swiper from 'swiper';
 
 const route = useRoute();
 const loading = ref(false);
@@ -19,7 +20,6 @@ const comicDetail = ref<detailRespose>({}); // 详情原始数据
 const comitStore = useComicStore();
 const currentChapter = ref<detailChapter>({});
 const currentImgList = ref<getChapterRespose[] | any[]>([]);
-const mySwiper = ref<any>(null);
 
 const animateId: ComputedRef<string> = computed(() => route.query.animateId as string);
 
@@ -31,7 +31,7 @@ const getNextChapter = (chapterId: string | number) => {
   return list[currentIndex + 1];
 };
 // 查找上一话
-const getPrveChapter = (chapterId: string | number) => {
+const getPrevChapter = (chapterId: string | number) => {
   const list = comicDetail.value.chapterList || [];
   const currentIndex = list.findIndex(item => Number(item.chapterId) == Number(chapterId));
   if (currentIndex <= 0) return false;
@@ -51,23 +51,6 @@ const updateCollect = async () => {
     source: 1
   });
 };
-// 组装显示数据
-const createImageList = async (chapterId: string | number) => {
-  // const list = [];
-  // const next = getNextChapter(chapterId);
-  // const prve = getPrveChapter(chapterId);
-  // const currentList = await getChapter(chapterId);
-  // list.push(...currentList);
-  // if (next && next.chapterId) {
-  //   const nextList = await getChapter(next.chapterId);
-  //   list.push(...nextList);
-  // }
-  // if (prve && prve.chapterId) {
-  //   const prveList = await getChapter(prve.chapterId);
-  //   list.unshift(...prveList);
-  // }
-  // return list;
-};
 // 获取详情
 const getDetail = async (animateId: string) => {
   if (!animateId) return;
@@ -81,24 +64,31 @@ const getDetail = async (animateId: string) => {
 };
 
 // 切换时触发
-const onSwiperChange = async (index: number, data: any) => {
+const onSwiperChange = async (index: number, data: any, swiper: Swiper) => {
   const { chapterId } = data;
   const nextChpater = getNextChapter(chapterId);
-  const prveChpater = getPrveChapter(chapterId);
+  // const prevChpater = getPrevChapter(chapterId);
   if (nextChpater && nextChpater.chapterId) {
-    const isNext = comitStore.hasChapterData(animateId.value, nextChpater.chapterId);
+    // const isNext = comitStore.hasChapterData(animateId.value, nextChpater.chapterId);
+    const isNext = !!currentImgList.value.find((item: getChapterRespose) => item.chapterId === nextChpater.chapterId);
     if (!isNext) {
       const nextList = await getChapter(nextChpater.chapterId);
-      if (mySwiper.value) mySwiper.value.appendSlide(nextList);
+      currentImgList.value = [...currentImgList.value, ...nextList];
     }
   }
-  if (prveChpater && prveChpater.chapterId) {
-    const isPrve = comitStore.hasChapterData(animateId.value, prveChpater?.chapterId);
-    if (!isPrve) {
-      const nextList = await getChapter(prveChpater.chapterId);
-      if (mySwiper.value) mySwiper.value.prependSlide(nextList);
-    }
-  }
+  // 向前添加回跳有点问题 暂时不管
+  // if (prevChpater && prevChpater.chapterId) {
+  //   const isPrev = comitStore.hasChapterData(animateId.value, prevChpater?.chapterId);
+  //   if (!isPrev) {
+  //     const prevList = await getChapter(prevChpater.chapterId);
+  //     if (mySwiper.value) {
+  //       currentImgList.value = [...prevList, ...currentImgList.value];
+  //       setTimeout(() => {
+  //         swiper.slideTo(index + Number(prevList[0].total), 0);
+  //       }, 0);
+  //     }
+  //   }
+  // }
 };
 
 onMounted(async () => {

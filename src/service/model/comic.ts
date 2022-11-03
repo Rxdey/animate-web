@@ -99,6 +99,7 @@ export type getChapterRespose = {
     chapterId?: string | number;
     index?: string | number;
     total?: string | number;
+    title?: string
 }
 /**
  * 获取当前话内容

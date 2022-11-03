@@ -34,7 +34,7 @@
         <div class="clearAll" @click="onClear">清除搜索记录</div>
       </div>
     </template>
-    <Load type="empty" v-if="historyList.length && !loading">
+    <Load type="empty" v-if="!historyList.length && !loading">
       <span>什么都没有~</span>
     </Load>
     <div class="result-list" v-show="!showHistoryList">

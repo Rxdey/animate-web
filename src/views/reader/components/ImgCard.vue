@@ -1,7 +1,10 @@
 <template>
   <div class="img-card">
     <img v-if="data.imgUrl && !loading" :src="getImgUrl(data.imgUrl)" />
-    <div class="number" v-else>{{ data.index || 1 }}</div>
+    <div class="number" v-else>
+      <span class="index">{{ data.title }}</span>
+      <span>{{ data.index }} / {{ data.total }}</span>
+    </div>
   </div>
 </template>
 
@@ -32,7 +35,7 @@ const getImgUrl = (url: string) => `${BASE_URL}/loadImg?url=${encodeURIComponent
     width: 100%;
     height: 100%;
     color: #fff;
-    font-size: 120px;
+
     text-align: center;
     position: absolute;
     display: flex;
@@ -40,6 +43,9 @@ const getImgUrl = (url: string) => `${BASE_URL}/loadImg?url=${encodeURIComponent
     justify-content: center;
     top: 0;
     left: 0;
+    .index {
+      font-size: 120px;
+    }
   }
   img {
     width: 100%;
