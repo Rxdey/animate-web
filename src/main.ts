@@ -16,6 +16,7 @@ import 'vant/es/notify/style';
 import 'vant/es/image-preview/style';
 import '@/assets/css/reset.less';
 import '@/assets/css/common.less';
+import defaultImg from '@/assets/img/default.png';
 
 
 
@@ -26,8 +27,8 @@ app.use(router)
 app.use(pinia)
 app.use(Lazyload, {
   lazyComponent: true,
-  loading: 'src/assets/img/default.png',
-  error: 'src/assets/img/default.png'
+  loading: defaultImg,
+  error: defaultImg
 });
 setDialogDefaultOptions({
   theme: 'round-button',

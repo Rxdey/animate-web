@@ -14,10 +14,33 @@ export default defineConfig({
     Components({
       resolvers: [VantResolver()],
     }),
-    // VitePWA({
-    //   registerType: 'autoUpdate',
-
-    // })
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      workbox: {
+        globPatterns: ['**/*.{ttf}']
+      },
+      manifest: {
+        name: '漫漫漫漫画哟',
+        short_name: '漫漫漫漫画哟',
+        description: '嘘~ 是别的地方来的漫画',
+        theme_color: '#000000',
+        display: "standalone",
+        "background_color": "#000000",
+        icons: [
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+      }
+    })
   ],
   resolve: {
     alias: {
@@ -28,6 +51,13 @@ export default defineConfig({
   server: {
     port: 9011,
     host: '0.0.0.0',
-    // proxy: {}
+    proxy: {
+      '/api': { // 代理api
+        target: 'http://127.0.0.1:9088', // 服务器api地址
+        changeOrigin: true,
+        ws: true,
+        rewrite: path => path.replace(/^\/api/, '')
+      }
+    }
   }
 })
