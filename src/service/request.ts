@@ -36,10 +36,10 @@ const request = async <T, P>(config: AxiosCustomConfig, data: T): Promise<Respon
   }
   const instance = defaultInstance(setting);
   try {
-    if (type === 'jsonp') {
-      const res = await jsonp(url, data);
-      return res;
-    }
+    // if (type === 'jsonp') {
+    //   const res = await jsonp(url, data);
+    //   return res;
+    // }
     const res: ResponseType<P> = await instance(setting);
     return res.data || { state: 0 };
   } catch (error: any) {

@@ -47,12 +47,5 @@ export const useComicStore = defineStore('comic', {
             this.comicChapterImgList[animateId][chapterId] = data;
             return data;
         }
-    },
-    getters: {
-        hasChapterData(state) {
-            return (animateId: string | number, chapterId?: string | number) => {
-                return !!(animateId && chapterId && state.comicChapterImgList[animateId] && state.comicChapterImgList[animateId][chapterId])
-            }
-        }
     }
 })

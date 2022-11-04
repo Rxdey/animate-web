@@ -46,7 +46,9 @@ const defaultInstance = (config: AxiosCustomConfig) => {
       token: Cookies.get('token')
     },
   }));
-  instance.interceptors.response.use((response) => response, (error) => {
+  instance.interceptors.response.use((response) => {
+    return response;
+  }, (error) => {
     const status: number = error.request ? error.request.status : 0;
     const action: ActionType = {
       405: '登录信息获取失败', // 这里没token返回的是405

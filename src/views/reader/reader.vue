@@ -1,9 +1,11 @@
 <template>
   <div class="reader">
-    <div class="reader-loading" v-if="loading">
-      <van-loading size="40" type="spinner">火热装载中~</van-loading>
+    <div class="reader-wrap" v-show="loading || loadStatus">
+      <div class="reader-loading">
+        <van-loading size="40" type="spinner">火热装载中~</van-loading>
+      </div>
     </div>
-    <template v-else>
+    <template v-if="!loading">
       <CusotmSwipter v-if="currentImgList.length" :list="currentImgList" @slideChange="onSwiperChange" :loadStatus="loadStatus" :lastPage="route.query.lastPage"></CusotmSwipter>
       <StatusBar :current="currentChapter"></StatusBar>
     </template>
@@ -47,8 +49,8 @@ const getPrevChapter = (chapterId: string | number) => {
 };
 
 // 获取指定话
-const getChapter = (chapterId: string | number) => {
-  return comitStore.GET_COMIC_CHAPTER_IMG(animateId.value, chapterId);
+const getChapter = async (chapterId: string | number) => {
+  return await comitStore.GET_COMIC_CHAPTER_IMG(animateId.value, chapterId);
 };
 
 // 更新记录
@@ -79,7 +81,6 @@ const onSwiperChange = async (index: number, data: getChapterRespose, swiper: Sw
   const nextChpater = getNextChapter(chapterId);
   const prevChpater = getPrevChapter(chapterId);
   if (nextChpater && nextChpater.chapterId) {
-    // const isNext = comitStore.hasChapterData(animateId.value, nextChpater.chapterId);
     const isNext = !!currentImgList.value.find((item: getChapterRespose) => item.chapterId === nextChpater.chapterId);
     if (!isNext) {
       const nextList = await getChapter(nextChpater.chapterId);
@@ -87,17 +88,14 @@ const onSwiperChange = async (index: number, data: getChapterRespose, swiper: Sw
     }
   }
   if (prevChpater && prevChpater.chapterId) {
-    // const isPrev = comitStore.hasChapterData(animateId.value, prevChpater?.chapterId);
     const isPrev = !!currentImgList.value.find((item: getChapterRespose) => item.chapterId === prevChpater.chapterId);
     if (!isPrev) {
       const prevList = await getChapter(prevChpater.chapterId);
       currentImgList.value = [...prevList, ...currentImgList.value];
       setTimeout(() => {
         swiper.slideTo(index + Number(prevList[0].total), 0);
-      }, 0);
-      setTimeout(() => {
         loadStatus.value = false;
-      }, 1000);
+      }, 0);
     }
   }
 };
