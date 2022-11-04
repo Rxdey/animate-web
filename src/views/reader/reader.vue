@@ -1,25 +1,33 @@
 <template>
   <div class="reader">
-    <CusotmSwipter v-if="currentImgList.length" :list="currentImgList" @slideChange="onSwiperChange"></CusotmSwipter>
+    <div class="reader-loading" v-if="loading">
+      <van-loading size="40" type="spinner">火热装载中~</van-loading>
+    </div>
+    <template v-else>
+      <CusotmSwipter v-if="currentImgList.length" :list="currentImgList" @slideChange="onSwiperChange" :loadStatus="loadStatus" :lastPage="route.query.lastPage"></CusotmSwipter>
+      <StatusBar :current="currentChapter"></StatusBar>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed, ComputedRef } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import Swiper from 'swiper';
 import { update, getChapterFeatch, type updateParams, type detailRespose, type detailChapter, type getChapterRespose } from '@/service/model/comic';
 import { useComicStore } from '@/store/modules/useComicStore';
 import { changeTitle } from '@/utils';
 import { showToast } from 'vant';
 import CusotmSwipter from './components/CusotmSwipter.vue';
-import Swiper from 'swiper';
+import StatusBar from './components/StatusBar.vue';
 
 const route = useRoute();
 const loading = ref(false);
 const comicDetail = ref<detailRespose>({}); // 详情原始数据
 const comitStore = useComicStore();
-const currentChapter = ref<detailChapter>({});
+const currentChapter = ref<getChapterRespose>({}); // 当前页面
 const currentImgList = ref<getChapterRespose[] | any[]>([]);
+const loadStatus = ref(true);
 
 const animateId: ComputedRef<string> = computed(() => route.query.animateId as string);
 
@@ -60,14 +68,16 @@ const getDetail = async (animateId: string) => {
   comicDetail.value = res;
   changeTitle(res.name || '');
   if (!res.chapterList) return;
-  currentChapter.value = res.chapterList?.find(item => Number(item.chapterId) === Number(route.query.lastChapterId)) || {};
+  // currentChapter.value = res.chapterList?.find(item => Number(item.chapterId) === Number(route.query.lastChapterId)) || {};
 };
 
 // 切换时触发
-const onSwiperChange = async (index: number, data: any, swiper: Swiper) => {
-  const { chapterId } = data;
+const onSwiperChange = async (index: number, data: getChapterRespose, swiper: Swiper) => {
+  const { chapterId } = data || {};
+  currentChapter.value = data;
+  if (!chapterId) return;
   const nextChpater = getNextChapter(chapterId);
-  // const prevChpater = getPrevChapter(chapterId);
+  const prevChpater = getPrevChapter(chapterId);
   if (nextChpater && nextChpater.chapterId) {
     // const isNext = comitStore.hasChapterData(animateId.value, nextChpater.chapterId);
     const isNext = !!currentImgList.value.find((item: getChapterRespose) => item.chapterId === nextChpater.chapterId);
@@ -76,19 +86,20 @@ const onSwiperChange = async (index: number, data: any, swiper: Swiper) => {
       currentImgList.value = [...currentImgList.value, ...nextList];
     }
   }
-  // 向前添加回跳有点问题 暂时不管
-  // if (prevChpater && prevChpater.chapterId) {
-  //   const isPrev = comitStore.hasChapterData(animateId.value, prevChpater?.chapterId);
-  //   if (!isPrev) {
-  //     const prevList = await getChapter(prevChpater.chapterId);
-  //     if (mySwiper.value) {
-  //       currentImgList.value = [...prevList, ...currentImgList.value];
-  //       setTimeout(() => {
-  //         swiper.slideTo(index + Number(prevList[0].total), 0);
-  //       }, 0);
-  //     }
-  //   }
-  // }
+  if (prevChpater && prevChpater.chapterId) {
+    // const isPrev = comitStore.hasChapterData(animateId.value, prevChpater?.chapterId);
+    const isPrev = !!currentImgList.value.find((item: getChapterRespose) => item.chapterId === prevChpater.chapterId);
+    if (!isPrev) {
+      const prevList = await getChapter(prevChpater.chapterId);
+      currentImgList.value = [...prevList, ...currentImgList.value];
+      setTimeout(() => {
+        swiper.slideTo(index + Number(prevList[0].total), 0);
+      }, 0);
+      setTimeout(() => {
+        loadStatus.value = false;
+      }, 1000);
+    }
+  }
 };
 
 onMounted(async () => {
@@ -98,4 +109,6 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="less" scope></style>
+<style lang="less" scope>
+@import './index.less';
+</style>

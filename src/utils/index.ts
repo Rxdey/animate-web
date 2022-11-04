@@ -145,3 +145,12 @@ export const dataURLtoBlob = (dataurl: string | undefined) => {
     }
     return new Blob([u8arr], { type: mime });
 };
+
+// 传教随机字符串
+export const createId = (len = 5) => {
+    if (len > 11) len = 11;
+    const str = Math.random()
+        .toString(36)
+        .substring(2);
+    return str.substring(0, len);
+};
