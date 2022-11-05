@@ -1,6 +1,6 @@
 <template>
   <SwiperCom v-if="conf" v-bind="conf" @slide-change="onSlideChange" @init="onInit" ref="currentSwiper">
-    <swiper-slide v-for="(chapter, i) in list" :key="chapter.imgUrl" :virtual-index="chapter.imgUrl" :content="chapter">
+    <swiper-slide v-for="(chapter, i) in list" :key="`${chapter.animateId}_${chapter.chapterId}_${chapter.index}`" :virtual-index="`${chapter.animateId}_${chapter.chapterId}_${chapter.index}`" :content="chapter">
       <ImgCard v-if="chapter.imgUrl" :data="chapter" :loadStatus="loadStatus" ref="imgList"></ImgCard>
     </swiper-slide>
   </SwiperCom>
@@ -22,82 +22,71 @@ const route = useRoute();
 const props = withDefaults(
   defineProps<{
     list: getChapterRespose[];
-    activeIndex?: number;
     loadStatus: boolean;
     lastPage?: any;
   }>(),
   {
     list: () => [],
-    activeIndex: 0,
     loadStatus: true,
     lastPage: 0
   }
 );
 
-const emit = defineEmits(['slideChange']);
+const emit = defineEmits(['slideChange', 'init']);
 const virtualData = ref<getChapterRespose[]>([]);
 const conf = ref<any>(null);
 const imgList = ref<any>([]);
 const currentSwiper = ref<any>(null);
-
-// 更新记录
-const updateCollect = (current: any) => {
-  rxLocalStorage.setItem(`${current.animateId}`, JSON.stringify(current));
-  update({
-    animateId: current.animateId,
-    lastChapterId: current.chapterId,
-    lastChapterName: current.title,
-    lastPage: current.index,
-    // lastChapter: ,
-    source: 1
-  });
-};
+const activeIndex = ref(0);
 
 const onSlideChange = (swiper: Swiper) => {
-  const current = swiper.virtual.slides[swiper.activeIndex].props.content;
-  emit('slideChange', swiper.activeIndex, current, swiper);
+  console.log('slideChange');
+  activeIndex.value = swiper.activeIndex;
+  const current = props.list[swiper.activeIndex];
+  emit('slideChange', swiper.activeIndex, (list: any) => {
+    swiper.updateSlides();
+    swiper.virtual.update(true);
+    swiper.slideTo(swiper.activeIndex + Number(list[0].total), 0);
+  });
   // 滑动到当前页时，如果图片加载失败自动触发重载
   const activeImgCard = imgList.value.find((vm: any) => vm.getPropsData().chapterId === current.chapterId && vm.getPropsData().index === current.index);
   if (activeImgCard && activeImgCard.getLoadingError()) {
     activeImgCard.reloadImg();
   }
-  updateCollect(current);
 };
 
 const onInit = (swiper: Swiper) => {
-  const current = swiper.virtual.slides[swiper.activeIndex].props.content;
-  emit('slideChange', swiper.activeIndex, current, swiper);
-  rxLocalStorage.setItem(`${current.animateId}`, JSON.stringify(current));
-  // nextTick(() =>{
-  // const findIndex = props.list.findIndex((item) => {
-  //   return item.chapterId === current.chapterId && Number(item.index) === Number(props.lastPage)
-  // });
-  // console.log(findIndex);
-  // swiper.slideTo(findIndex, 0);
-  // updateCollect(current);
-  // })
+  // const current = props.list[swiper.activeIndex];
+  activeIndex.value = swiper.activeIndex;
+  emit('init', swiper.activeIndex, (list: any) => {
+    swiper.updateSlides();
+    swiper.virtual.update(true);
+    const lastPage = Number(route.query.lastPage);
+    swiper.slideTo(swiper.activeIndex + Number(list[0].total) + (lastPage > 0 ? lastPage - 1 : 0), 0);
+  });
 };
 
 watch(
   () => props.loadStatus,
   val => {
-    if (!val) {
-      nextTick(() => {
-        const findIndex = props.list.findIndex(item => {
-          return Number(item.chapterId) === Number(route.query.lastChapterId) && Number(item.index) === Number(route.query.lastPage);
-        });
-        if (findIndex >= 0) {
-          currentSwiper.value.$el.swiper.slideTo(findIndex, 0);
-        }
-      });
-    }
+    // if (!val) {
+    //   nextTick(() => {
+    //     const findIndex = props.list.findIndex(item => {
+    //       return Number(item.chapterId) === Number(route.query.lastChapterId) && Number(item.index) === Number(route.query.lastPage);
+    //     });
+    //     if (findIndex >= 0) {
+    //       currentSwiper.value.$el.swiper.slideTo(findIndex, 0);
+    //     }
+    //   });
+    // }
   }
 );
 onMounted(() => {
   virtualData.value = JSON.parse(JSON.stringify(props.list));
   conf.value = {
-    modules: [Virtual, Zoom],
-    zoom: true,
+    modules: [Virtual],
+    observer: true,
+    // zoom: true,
     virtual: {
       addSlidesAfter: 3,
       addSlidesBefore: 3

@@ -1,13 +1,13 @@
 <template>
   <div class="reader">
-    <div class="reader-wrap" v-show="loading || loadStatus">
+    <div class="reader-wrap" v-show="loading">
       <div class="reader-loading">
         <van-loading size="40" type="spinner">火热装载中~</van-loading>
       </div>
     </div>
     <template v-if="!loading">
-      <CusotmSwipter v-if="currentImgList.length" :list="currentImgList" @slideChange="onSwiperChange" :loadStatus="loadStatus" :lastPage="route.query.lastPage"></CusotmSwipter>
-      <StatusBar :current="currentChapter"></StatusBar>
+      <CusotmSwipter v-if="currentImgList.length" :list="currentImgList" @slideChange="onSwiperChange" @init="onInit" :loadStatus="loadStatus" :lastPage="route.query.lastPage"></CusotmSwipter>
+      <StatusBar v-if="currentChapter.chapterId" :current="currentChapter" @update="onUpdate"></StatusBar>
     </template>
   </div>
 </template>
@@ -18,7 +18,7 @@ import { useRouter, useRoute } from 'vue-router';
 import Swiper from 'swiper';
 import { update, getChapterFeatch, type updateParams, type detailRespose, type detailChapter, type getChapterRespose } from '@/service/model/comic';
 import { useComicStore } from '@/store/modules/useComicStore';
-import { changeTitle } from '@/utils';
+import { changeTitle, rxLocalStorage } from '@/utils';
 import { showToast } from 'vant';
 import CusotmSwipter from './components/CusotmSwipter.vue';
 import StatusBar from './components/StatusBar.vue';
@@ -29,7 +29,7 @@ const comicDetail = ref<detailRespose>({}); // 详情原始数据
 const comitStore = useComicStore();
 const currentChapter = ref<getChapterRespose>({}); // 当前页面
 const currentImgList = ref<getChapterRespose[] | any[]>([]);
-const loadStatus = ref(true);
+const loadStatus = ref(false);
 
 const animateId: ComputedRef<string> = computed(() => route.query.animateId as string);
 
@@ -73,13 +73,18 @@ const getDetail = async (animateId: string) => {
   // currentChapter.value = res.chapterList?.find(item => Number(item.chapterId) === Number(route.query.lastChapterId)) || {};
 };
 
+// 初始化
+const onInit = (index: number, cb = (e: any) => {}) => {
+  onSwiperChange(index, cb);
+};
 // 切换时触发
-const onSwiperChange = async (index: number, data: getChapterRespose, swiper: Swiper) => {
-  const { chapterId } = data || {};
-  currentChapter.value = data;
+const onSwiperChange = async (index: number, cb = (e: any) => {}) => {
+  const { chapterId } = currentImgList.value[index] || {};
+  currentChapter.value = currentImgList.value[index];
   if (!chapterId) return;
   const nextChpater = getNextChapter(chapterId);
   const prevChpater = getPrevChapter(chapterId);
+
   if (nextChpater && nextChpater.chapterId) {
     const isNext = !!currentImgList.value.find((item: getChapterRespose) => item.chapterId === nextChpater.chapterId);
     if (!isNext) {
@@ -87,17 +92,26 @@ const onSwiperChange = async (index: number, data: getChapterRespose, swiper: Sw
       currentImgList.value = [...currentImgList.value, ...nextList];
     }
   }
+
   if (prevChpater && prevChpater.chapterId) {
     const isPrev = !!currentImgList.value.find((item: getChapterRespose) => item.chapterId === prevChpater.chapterId);
     if (!isPrev) {
       const prevList = await getChapter(prevChpater.chapterId);
       currentImgList.value = [...prevList, ...currentImgList.value];
-      setTimeout(() => {
-        swiper.slideTo(index + Number(prevList[0].total), 0);
-        loadStatus.value = false;
-      }, 0);
+      cb(prevList);
     }
   }
+};
+const onUpdate = (current: getChapterRespose) => {
+  rxLocalStorage.setItem(`${current.animateId}`, JSON.stringify(current));
+  update({
+    animateId: current.animateId as string,
+    lastChapterId: current.chapterId,
+    lastChapterName: current.title,
+    lastPage: current.index,
+    // lastChapter: ,
+    source: 1
+  });
 };
 
 onMounted(async () => {

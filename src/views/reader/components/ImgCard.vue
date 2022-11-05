@@ -3,6 +3,7 @@
       <img v-if="data.imgUrl && !loadStatus && !loadingError" :src="currentUrl" @error="onError" @load="onLoad" />
       <div class="number" v-if="imageLoading">
         <span class="index">{{ data.index }}</span>
+        <span>{{data.title}} {{data.index}} / {{data.total}}</span>
         <span v-if="loadingError" @click="reloadImg">加载失败了,👉👉重新加载</span>
         <span v-else>{{ getRandomTxt() }}</span>
       </div>

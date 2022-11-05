@@ -9,9 +9,11 @@
 
 <script setup lang="ts">
 import { getChapterRespose } from '@/service/model/comic';
-import { ref, onMounted, computed } from 'vue';
+import { rxLocalStorage } from '@/utils';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
+const emit = defineEmits(['update']);
 const props = withDefaults(defineProps<{
     current: getChapterRespose
 }>(), {
@@ -20,7 +22,13 @@ const props = withDefaults(defineProps<{
         total: 0
     })
 });
+const update = (val: getChapterRespose) => {
+    emit('update', val);
+}
 
+watch(() => props.current, (val) => {
+    update(val);
+})
 
 </script>
 
