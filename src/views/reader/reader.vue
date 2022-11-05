@@ -30,6 +30,7 @@ const comitStore = useComicStore();
 const currentChapter = ref<getChapterRespose>({}); // 当前页面
 const currentImgList = ref<getChapterRespose[] | any[]>([]);
 const loadStatus = ref(false);
+const direction = ref(0); // TODO ==> 反向逻辑
 
 const animateId: ComputedRef<string> = computed(() => route.query.animateId as string);
 
