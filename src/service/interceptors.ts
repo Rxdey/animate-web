@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosInstance, RawAxiosRequestHeaders } from 'axios';
 import qs from 'qs';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import { showToast } from 'vant';
+import { rxLocalStorage } from '@/utils';
 
 axios.defaults.withCredentials = true;
 
@@ -43,7 +44,7 @@ const defaultInstance = (config: AxiosCustomConfig) => {
     ...res,
     headers: <RawAxiosRequestHeaders & { token?: string }>{
       ...res.headers,
-      token: Cookies.get('token')
+      token: rxLocalStorage.getItem('token')
     },
   }));
   instance.interceptors.response.use((response) => {

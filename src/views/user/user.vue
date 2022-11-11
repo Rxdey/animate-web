@@ -28,7 +28,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Cell from '@/components/Cell/Cell.vue';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import { rxLocalStorage } from '@/utils';
 import { showConfirmDialog, showToast } from 'vant';
 import { getUserInfo, type UserType } from '@/service/model/login';
@@ -62,7 +62,6 @@ const logOut = () => {
     message: '确定要退出登录吗？'
   })
     .then(() => {
-      Cookies.remove('token');
       rxLocalStorage.clear();
       showToast('退出去了~')
       setTimeout(() => {

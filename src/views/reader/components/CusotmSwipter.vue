@@ -1,5 +1,5 @@
 <template>
-  <SwiperCom v-if="conf" v-bind="conf" @slide-change="onSlideChange" @init="onInit" ref="currentSwiper">
+  <SwiperCom v-if="conf" v-bind="conf" @slide-change="onSlideChange" @init="onInit" ref="currentSwiper" class="mySwiper" :dir="dir">
     <swiper-slide v-for="(chapter, i) in list" :key="`${chapter.animateId}_${chapter.chapterId}_${chapter.index}`" :virtual-index="`${chapter.animateId}_${chapter.chapterId}_${chapter.index}`" :content="chapter">
       <ImgCard v-if="chapter.imgUrl" :data="chapter" :loadStatus="loadStatus" ref="imgList"></ImgCard>
     </swiper-slide>
@@ -24,11 +24,13 @@ const props = withDefaults(
     list: getChapterRespose[];
     loadStatus: boolean;
     lastPage?: any;
+    dir?: string;
   }>(),
   {
     list: () => [],
     loadStatus: true,
-    lastPage: 0
+    lastPage: 0,
+    dir: 'rtl'
   }
 );
 
@@ -96,12 +98,10 @@ onMounted(() => {
 </script>
 
 <style lang="less" scope>
-// .CusotmSwiper {
-//   height: 100%;
-//   overflow: hidden;
-
-// }
 .swiper {
   height: 100%;
+}
+.mySwiper {
+  // transform: rotateY(180deg);
 }
 </style>

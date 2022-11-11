@@ -6,22 +6,23 @@
       </div>
     </div>
     <template v-if="!loading">
-      <CusotmSwipter v-if="currentImgList.length" :list="currentImgList" @slideChange="onSwiperChange" @init="onInit" :loadStatus="loadStatus" :lastPage="route.query.lastPage"></CusotmSwipter>
-      <StatusBar v-if="currentChapter.chapterId" :current="currentChapter" @update="onUpdate"></StatusBar>
+      <CusotmSwipter v-if="currentImgList.length" :list="currentImgList" @slideChange="onSwiperChange" @init="onInit" :loadStatus="loadStatus" :lastPage="route.query.lastPage" :dir="currentDir" />
+      <StatusBar v-if="currentChapter.chapterId" :current="currentChapter" @update="onUpdate" />
+      <!-- <ToolBar v-model="dir" /> -->
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, ComputedRef } from 'vue';
+import { ref, onMounted, computed, ComputedRef, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import Swiper from 'swiper';
 import { update, getChapterFeatch, type updateParams, type detailRespose, type detailChapter, type getChapterRespose } from '@/service/model/comic';
 import { useComicStore } from '@/store/modules/useComicStore';
 import { changeTitle, rxLocalStorage } from '@/utils';
 import { showToast } from 'vant';
 import CusotmSwipter from './components/CusotmSwipter.vue';
 import StatusBar from './components/StatusBar.vue';
+import ToolBar from './components/ToolBar.vue';
 
 const route = useRoute();
 const loading = ref(false);
@@ -30,7 +31,15 @@ const comitStore = useComicStore();
 const currentChapter = ref<getChapterRespose>({}); // 当前页面
 const currentImgList = ref<getChapterRespose[] | any[]>([]);
 const loadStatus = ref(false);
-const direction = ref(0); // TODO ==> 反向逻辑
+const dir = ref(2); // TODO ==> 反向逻辑
+
+const currentDir = computed(() => {
+  const action: { [key: number]: string } = {
+    1: 'ltr',
+    2: 'rtl'
+  };
+  return action[dir.value || 2]
+})
 
 const animateId: ComputedRef<string> = computed(() => route.query.animateId as string);
 
@@ -114,7 +123,9 @@ const onUpdate = (current: getChapterRespose) => {
     source: 1
   });
 };
-
+watch(() => dir.value, (val) => {
+  rxLocalStorage.setItem('dir', String(val));
+})
 onMounted(async () => {
   updateCollect();
   await getDetail(animateId.value);

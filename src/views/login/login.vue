@@ -29,7 +29,7 @@ import { login } from '@/service/model/login';
 import { showToast } from 'vant';
 import md5 from 'md5';
 import { rxLocalStorage } from '@/utils';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 
 const router = useRouter();
 const userName = ref('');
@@ -58,10 +58,10 @@ const handleLogin = async () => {
   }
   rxLocalStorage.setItem('userInfo', JSON.stringify(data));
   const { token } = data;
-  Cookies.set('token', token || '');
+  rxLocalStorage.setItem('token', token || '');
   showToast('登录成功~');
-  Cookies.set('userName', userName.value);
-  Cookies.set('password', password.value);
+  rxLocalStorage.setItem('userName', userName.value);
+  rxLocalStorage.setItem('password', password.value);
   loading.value = true;
   setTimeout(() => {
     router.push('/home');
@@ -69,8 +69,8 @@ const handleLogin = async () => {
 };
 
 onMounted(() => {
-  userName.value = Cookies.get('userName') || '';
-  password.value = Cookies.get('password') || '';
+  userName.value = rxLocalStorage.getItem('userName') || '';
+  password.value = rxLocalStorage.getItem('password') || '';
 })
 </script>
 
