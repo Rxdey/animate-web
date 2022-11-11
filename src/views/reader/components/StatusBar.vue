@@ -39,7 +39,7 @@ watch(() => props.current, (val) => {
     right: 0;
     color: #aaa;
     font-size: var(--font-s);
-    padding: 6px 16px;
+    padding: 6px 48px;
     span {
         margin-left: 32px;
         letter-spacing: 2px;
